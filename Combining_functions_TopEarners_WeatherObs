@@ -1,0 +1,174 @@
+#1. We define an employee's total earnings to be their monthly salary x months worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. 
+    Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. 
+    Then print these values as 2 space-separated integers.
+
+Answer:
+SELECT months*salary,COUNT(*) 
+FROM Employee 
+GROUP BY months*salary 
+having count(*) = 7 
+ORDER BY months*salary DESC;
+
+or
+
+select salary*months,count(name) 
+from Employee 
+where salary*months in (select max(salary*months) from Employee) 
+group by salary*months;
+
+Output: 108064 7
+
+Explanation:
+-For this problem, we can compute earnings first, then group data by earnings and get earnings and number of employees for each group. Finally sort groups by earnings in descending order and output the first one.
+-compute earnings ==> SELECT (months*salary) as earnings
+-output number of employees ==> COUNT(*)
+-in Employee table ==> FROM Employee
+-group employees by earnings ==> GROUP BY earnings
+-sort by earnings in descending order ==> ORDER BY earnings DESC
+-output the one having the maximum earnings ==> LIMIT 1
+
+#2. Query the following two values from the STATION table:
+    The sum of all values in LAT_N rounded to a scale of 2 decimal places.
+    The sum of all values in LONG_W rounded to a scale of 2 decimal places.
+
+Answer:
+SELECT ROUND(SUM(LAT_N), 2), ROUND(SUM(LONG_W), 2) 
+FROM STATION;
+
+Output: 42850.04 47381.48
+
+Explanation:
+-sum of values in LAT_N ==> SUM(LAT_N)
+-round sum of LAT_N to scale of 2 decimal places ==>
+-SELECT ROUND(SUM(LAT_N), 2)
+-sum of values in LONG_W ==> SUM(LONG_W)
+-round sum of LONG_W to a scale of 2 decimal places ==>
+-ROUND(SUM(LONG_W), 2)
+-from STATION table ==> FROM STATION
+
+#3. Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than 38.7880 and less than 137.2345. Truncate your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(SUM(LAT_N), 4) 
+FROM STATION 
+WHERE LAT_N > 38.7880 AND LAT_N < 137.2345;
+
+Output: 36354.8135
+
+Explanation:
+-sum of LAT_N ==> SUM(LAT_N)
+-truncate answer to 4 decimal places ==> SELECT ROUND(SUM(LAT_N), 4)
+-from STATION table ==> FROM STATION
+-values greater than 38.7880 and less than 137.2345 ==>
+-WHERE LAT_N > 38.7880 AND LAT_N < 137.2345
+
+#4. Query the greatest value of the Northern Latitudes (LAT_N) from STATION that is less than 137.2345. Truncate your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(MAX(LAT_N), 4) 
+FROM STATION 
+WHERE LAT_N < 137.2345;
+
+Output: 137.0193
+
+Explanation:
+-query greatest value of LAT_N ==> SELECT MAX(LAT_N)
+-truncate answer to 4 decimal places ==> SELECT ROUND(MAX(LAT_N), 4)
+-from STATION table ==> FROM STATION
+-less than 137.2345 ==> WHERE LAT_N < 137.2345
+
+#5. Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N) in STATION that is less than 137.2345. Round your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(LONG_W, 4) FROM STATION WHERE LAT_N < 137.2345 ORDER BY LAT_N DESC LIMIT 1;
+ or
+Select round(LONG_W,'4') from STATION WHERE LAT_N = (SELECT MAX(LAT_N) FROM STATION WHERE LAT_N<137.2345);
+
+Output: 117.2465
+
+Explanation: 
+-query LONG_W ==> SELECT LONG_W
+-round answer to 4 decimal places ==> SELECT ROUND(LONG_W, 4)
+-in STATION table ==> FROM STATION
+-LAT_N less than 137.2345 ==> WHERE LAT_N < 137.2345
+-for the largest LAT_N ==> ORDER BY LAT_N DESC LIMIT 1
+
+#6. Query the smallest Northern Latitude (LAT_N) from STATION that is greater than 38.7780. Round your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(MIN(LAT_N), 4) 
+FROM STATION 
+WHERE LAT_N > 38.7780;
+
+Output: 38.8526
+
+Explanation:
+-query the smallest LAT_N ==> SELECT MIN(LAT_N)
+-round answer to 4 deciaml places ==> SELECT ROUND(MIN(LAT_N), 4)
+-from STATION table ==> FROM STATION
+-greater than 38.7880 ==> WHERE LAT_N > 38.7780
+
+#7. Query the Western Longitude (LONG_W)where the smallest Northern Latitude (LAT_N) in STATION is greater than 38.7780. Round your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(LONG_W, 4) FROM STATION WHERE LAT_N > 38.7780 ORDER BY LAT_N LIMIT 1;
+ or
+select round(LONG_W,4) 
+from STATION 
+where LAT_N=(select min(LAT_N) from STATION where LAT_N>38.7780);
+
+Output: 70.1378
+
+Explanation:
+-query LONG_W ==> SELECT LONG_W
+-round answer to 4 decimal places ==> SELECT ROUND(LONG_W, 4)
+-in STATION table ==> FROM STATION
+-greater than 38.7780 ==> WHERE LAT_N > 38.7780
+-for the smallest LAT_N ==> ORDER BY LAT_N LIMIT 1
+
+#8. Consider P1 (a,b) and P2 (c,d) to be two points on a 2D plane.
+    a happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+    b happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+    c happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+    d happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+Query the Manhattan Distance between points P1 and P2 and round it to a scale of 4 decimal places.
+
+Answer:
+SELECT ROUND(ABS(MIN(LAT_N)-MAX(LAT_N)) + ABS(MIN(LONG_W)-MAX(LONG_W)), 4) 
+FROM STATION;
+
+Output: 259.6859
+
+Explanation:
+-The Manhattan Distance is |x1 - x2| + |y1 - y2| = |a - c| + |b - d|.
+-|a - c| + |b - d| ==> ABS(MIN(LAT_N)-MAX(LAT_N)) + ABS(MIN(LONG_W)-MAX(LONG_W))
+-round to a scale of 4 decimal places ==> SELECT ROUND(ABS(MIN(LAT_N)-MAX(LAT_N)) + ABS(MIN(LONG_W)-MAX(LONG_W)), 4)
+-from STATION table ==> FROM STATION
+
+#9. Consider P1(a,c) and P2(b,d) to be two points on a 2D plane where (a,b) are the respective minimum and maximum values of Northern Latitude (LAT_N) and (c,d) are the respective minimum and maximum values of Western Longitude (LONG_W) in STATION.
+    Query the Euclidean Distance between points P1 and P2 and format your answer to display 4 decimal digits.
+
+Answer:
+Select round(sqrt(power((min(lat_n)-max(lat_n)),2) + power((min(long_w)-max(long_w)),2)),4) 
+From station;
+
+Output: 184.1616
+
+Explanation:
+-The Euclidean Distance is sqrt((a-b)2 + (c-d)2)
+-Euclidean Distance ==> SQRT(POW(MIN(LAT_N)-MAX(LAT_N), 2) + POW(MIN(LONG_W)-MAX(LONG_W), 2))
+-round answer to 4 decimal places ==> SELECT ROUND(SQRT(POW(MIN(LAT_N)-MAX(LAT_N), 2) + POW(MIN(LONG_W)-MAX(LONG_W), 2)), 4)
+-in STATION table ==> FROM STATION
+
+#10. A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to 4 decimal places.
+
+Answer:
+SELECT ROUND(MEDIAN(LAT_N), 4)
+FROM STATION;
+
+Output: 83.8913
+
+
+
+
+
