@@ -1,0 +1,29 @@
+#1. Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table, but did not realize her keyboard's 0 key was broken until after completing the calculation. 
+She wants your help finding the difference between her miscalculation (using salaries with any zeroes removed), and the actual average salary.
+Write a query calculating the amount of error (i.e.:  average monthly salaries), and round it up to the next integer.
+
+The EMPLOYEES table is described as follows:
+|  Column  |   Type   |
+|---------------------|
+| ID       | Integer  |
+| Name     | String   |
+| Salary   | Integer  |
+Note: Salary is measured in dollars per month and its value is < 10 ^5.
+
+Answer:
+SELECT CEIL(AVG(Salary) - AVG(REPLACE(Salary, '0', ''))) FROM EMPLOYEES;
+
+Output: 2253
+
+Explanation:
+We can use REPLACE() function to solve the problem. The syntax is ‘REPLACE(str, from_str, to_str)’ and it returns the string str with all occurrences of the string from_str replaced by the string to_str.
+
+actual average monthly salaries ==> AVG(Salary)
+salary without zeros ==> REPLACE(Salary, ‘0’, ‘’)
+miscalculated average monthly salaries ==> AVG(REPLACE(Salary, ‘0’, ‘’))
+difference between actual and miscalculated average salaries ==>
+SELECT AVG(Salary) - AVG(REPLACE(Salary, ‘0’, ‘’))
+round the difference up to next integer ==> 
+SELECT CEIL(AVG(Salary) - AVG(REPLACE(Salary, ‘0’, ‘’)))
+from EMPLOYEES table ==> FROM EMPLOYEES
+(The CEIL() function returns the smallest integer value that is bigger than or equal to a number.)
